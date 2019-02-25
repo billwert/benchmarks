@@ -3,7 +3,7 @@
     "Source": {
       "Repository": "https://github.com/billwert/FrameworkBenchmarks.git",
       "BranchOrCommit": "master",
-      "DockerFile": "frameworks/CSharp/aspnetcore-mono/aspcore-mono.dockerfile",
+      "DockerFile": "frameworks/CSharp/aspnetcore-mono/aspcore-mono-aot.dockerfile",
       "DockerImageName": "aspnetcore-mono",
       "DockerContextDirectory": "frameworks/CSharp/aspnetcore-mono/"
     },
