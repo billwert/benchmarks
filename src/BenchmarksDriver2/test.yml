@@ -2,6 +2,7 @@
 # --config benchmarks.compose.yml --scenario plaintext --variable serverUri=http://10.0.0.102
 
 imports:
+  - https://raw.githubusercontent.com/aspnet/Benchmarks/master/src/BombardierClient/bombardier.yml
   - https://raw.githubusercontent.com/aspnet/Benchmarks/master/src/Wrk2Client/wrk2.yml
 jobs:
   aspnetbenchmarks:
@@ -12,26 +13,26 @@ jobs:
       transport: Sockets
       scenario: plaintext
     source:
-      localFolder: ~/src/benchmarks/
-      dockerFile: docker/benchmarks5.0/Middleware.dockerfile
+      localFolder: E:\source\aspnetbenchmarks
+      dockerFile: docker\benchmarks5.0\Middleware.dockerfile
       dockerImageName: app
       dockerContextDirectory: .
       dockerCommand: "--nonInteractive true --scenarios {{scenario}} --server-urls {{protocol}}://[*]:{{serverPort}} --server {{server}} --kestrelTransport {{transport}} --protocol {{protocol}}"
     readyStateText: Application started.
-  scenarios:
-    plaintext:
-      application:
+scenarios:
+  plaintext:
+    application:
       job: aspnetbenchmarks
       variables:
           scenario: plaintext
-      warmup:
+    warmup:
       job: bombardier
       variables:
           presetHeaders: plaintext
           path: /plaintext
           duration: 5
           serverPort: 5000
-      load:
+    load:
       job: bombardier
       variables:
           presetHeaders: plaintext
