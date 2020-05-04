@@ -14,7 +14,7 @@ jobs:
       scenario: plaintext
     source:
       localFolder: E:\source\aspnetbenchmarks
-      dockerFile: docker\benchmarks5.0\Middleware.dockerfile
+      dockerFile: docker/benchmarks5.0/Middleware.dockerfile
       dockerImageName: app
       dockerContextDirectory: .
       dockerCommand: "--nonInteractive true --scenarios {{scenario}} --server-urls {{protocol}}://[*]:{{serverPort}} --server {{server}} --kestrelTransport {{transport}} --protocol {{protocol}}"
