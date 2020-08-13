@@ -58,9 +58,9 @@ jobs:
       project: src/Downstream/Downstream.csproj
     readyStateText: Application started.
     variables:
-      downstreamPort: 5000
+      downstreamPort: 5005
     arguments: '--urls http://*:{{downstreamPort}}'
-    port: 5000
+    port: 5005
 
 scenarios:
   proxy-httpclient:
@@ -112,14 +112,14 @@ profiles:
   aspnet-physical:
     variables:
       serverUri: http://10.0.0.102
-      downstreamUri: http://10.0.0.103:5000
-      downstreamAddress: 10.0.0.103
-      downstreamPort: 5000
+      downstreamUri: http://10.0.0.102:5005
+      downstreamAddress: 10.0.0.102
+      downstreamPort: 5005
       cores: 12
     jobs:
       downstream:
         endpoints: 
-          - http://asp-perf-db:5001
+          - http://asp-perf-lin:5001
       application:
         endpoints: 
           - http://asp-perf-lin:5001

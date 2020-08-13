@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
+<<<<<<< HEAD
     <TargetFrameworks>net5.0</TargetFrameworks>
+=======
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+>>>>>>> 3fe1a68... just commit evertyhign for move
     <LangVersion>8</LangVersion>
   </PropertyGroup>
 

@@ -94,12 +94,13 @@ namespace Benchmarks
             {
                 webHostBuilder = webHostBuilder.UseKestrel(options =>
                 {
-                    var urls = config["urls"] ?? config["server.urls"];
+                    var urls =  config["server.urls"] ?? config["urls"];
 
                     if (!string.IsNullOrEmpty(urls))
                     {
                         foreach (var value in urls.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                         {
+                            Console.WriteLine("got url: " + value);
                             Listen(options, config, value);
                         }
                     }
