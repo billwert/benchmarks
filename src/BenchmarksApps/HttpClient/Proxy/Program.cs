@@ -16,7 +16,6 @@ using Microsoft.Crank.EventSources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Benchmarks;
 using System.Threading;
 
 namespace Proxy
@@ -80,7 +79,7 @@ namespace Proxy
             BenchmarksEventSource.MeasureAspNetVersion();
             BenchmarksEventSource.MeasureNetCoreAppVersion();
 
-            WriteStatistics();
+            
             for (int i = 0; i < _hosts.Count; i++)
             {
                 BenchmarksEventSource.Log.Metadata("Host Total: " + _hosts[i].Host.ToString(), "count", "count", "Total requests", "Total requests", "n0");
@@ -158,43 +157,17 @@ namespace Proxy
         }
         
         private static int hostIndex = 0;
+        private static object lockobj = new object();
         private static (Uri, HostEntry) BuildDestinationUri(HttpContext context) 
         {
-            var host = _hosts[hostIndex];
-            hostIndex = (hostIndex+1) % _hosts.Count;
-            return (new Uri(UriHelper.BuildAbsolute(_scheme, host.Host, _pathBase, context.Request.Path, context.Request.QueryString.Add(_appendQuery))), host);
-        }
-
-        private static void WriteStatistics()
-        {
-            var endpoints = new object[_hosts.Count];
-            for (int i = 0; i < _hosts.Count; i++)
+            HostEntry host = null;
+            lock(lockobj)
             {
-                var host = _hosts[i];
-                endpoints[i] = new {
-                    EndPoint = host.Host.ToString(),
-                    Requests = host.Requests,
-                    Success = host.Successes
-                };
+                host = _hosts[hostIndex];
+                hostIndex = (hostIndex+1) % _hosts.Count;
             }
-            Console.WriteLine("#StartJobStatistics"
-            + Environment.NewLine
-            + System.Text.Json.JsonSerializer.Serialize(new
-            {
-                Metadata = new object[]
-                {
-                    new { Source= "Benchmarks", Name= "AspNetCoreVersion", ShortDescription = "ASP.NET Core Version", LongDescription = "ASP.NET Core Version" },
-                    new { Source= "Benchmarks", Name= "NetCoreAppVersion", ShortDescription = ".NET Runtime Version", LongDescription = ".NET Runtime Version" },
-                },
-                Measurements = new object[]
-                {
-                    new { Timestamp = DateTime.UtcNow, Name = "AspNetCoreVersion", Value = typeof(IWebHostBuilder).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion },
-                    new { Timestamp = DateTime.UtcNow, Name = "NetCoreAppVersion", Value = typeof(object).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion },
-                },
-            })
-            + Environment.NewLine
-            + "#EndJobStatistics"
-            );
+            
+            return (new Uri(UriHelper.BuildAbsolute(_scheme, host.Host, _pathBase, context.Request.Path, context.Request.QueryString.Add(_appendQuery))), host);
         }
     }
 }
